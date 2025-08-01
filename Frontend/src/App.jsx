@@ -4,6 +4,7 @@ import Login from "./LoginPage";
 import Dashboard from "./Dashboard";
 import appStore from "./utils/appStore";
 import { Provider } from "react-redux";
+import { Button } from "@mui/material";
 
 function App() {
   return (

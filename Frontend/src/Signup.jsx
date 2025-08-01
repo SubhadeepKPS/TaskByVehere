@@ -12,6 +12,7 @@ import {
 export default function Signup() {
   const [form, setForm] = useState({
     name: "",
+    role: "",
     email: "",
     password: "",
   });
@@ -29,9 +30,9 @@ export default function Signup() {
     // You can add API call here
     try {
       const res = await axios.post("http://localhost:3000/auth/signup", form, {
-        withCredentials: true, // if using cookies
+        withCredentials: true,
       });
-      setMessage(res.data.message); // success
+      setMessage(res.data.message);
     } catch (err) {
       setMessage(err.response?.data?.message || "Signup error");
     }
@@ -54,6 +55,14 @@ export default function Signup() {
             label="Name"
             name="name"
             value={form.name}
+            onChange={handleChange}
+            margin="normal"
+          />
+          <TextField
+            fullWidth
+            label="Role"
+            name="role"
+            value={form.role}
             onChange={handleChange}
             margin="normal"
           />

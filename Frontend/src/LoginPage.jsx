@@ -33,19 +33,16 @@ export default function LoginPage() {
     // You can add API call here
     try {
       const res = await axios.post("http://localhost:3000/auth/login", form, {
-        withCredentials: true, // required for cookies
+        withCredentials: true,
       });
       setMessage(res.data);
       console.log(res.data.user);
 
       dispatch(addUser(res.data.user));
-      // Redirect or update state here
     } catch (err) {
       setMessage(err.response?.data?.message || "Login failed");
     }
   };
-
-  //   id, name, email, role, createdAt
 
   return (
     <Container maxWidth="sm" sx={{ marginTop: "100px" }}>

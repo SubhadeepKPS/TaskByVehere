@@ -23,40 +23,6 @@ authRouter.post("/auth/signup", async (req, res) => {
   }
 });
 
-// authRouter.post("/auth/login", async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     const [user] = await db.query("SELECT * FROM users WHERE email = ?", [
-//       email,
-//     ]);
-//     console.log(user);
-
-//     if (!user || user.length === 0) {
-//       res.status(401).json({ message: "Invalid email or password" });
-//     } else {
-//       const passwordMatch = await bcrypt.compare(password, user[0].password);
-//       if (passwordMatch) {
-//         // const token = await user[0].getJWT();
-//         const token = jwt.sign({ id: user[0].id }, "vehere@2025", {
-//           expiresIn: "1h",
-//         });
-//         console.log("Token1: " + token);
-//         res
-//           .cookie("tokens", token, {
-//             httpOnly: true,
-//             expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-//           })
-//           .status(200)
-//           .json({ message: "Login successful", user });
-//       } else {
-//         res.status(401).json({ message: "Invalid Credentials" });
-//       }
-//     }
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
-
 authRouter.post("/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -83,13 +49,30 @@ authRouter.post("/auth/login", async (req, res) => {
       .cookie("token", token, {
         httpOnly: true,
         sameSite: "Lax",
-        secure: false, // true in production with HTTPS
+        secure: false,
         maxAge: 24 * 60 * 60 * 1000,
       })
       .status(200)
       .json({ message: "Login successful", user: safeUser });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+authRouter.post("/auth/logout", async (req, res) => {
+  try {
+    res
+      .cookie("token", null, {
+        expires: new Date(Date.now()),
+      })
+      .status(200)
+      .json({
+        message: "You have logged out successfully",
+      });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error logging out user: " + error,
+    });
   }
 });
 

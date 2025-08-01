@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { removeUser } from "./utils/userSlice";
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -16,6 +19,7 @@ import { useEffect } from "react";
 
 export default function Dashboard() {
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [data, setData] = useState([
     {
       id: 1,
@@ -31,8 +35,20 @@ export default function Dashboard() {
       role: "User",
       createdAt: "2025-07-25T09:15:00Z",
     },
-    // Add more dummy records if needed
   ]);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:3000/auth/logout", {
+        withCredentials: true,
+      });
+      dispatch(removeUser());
+      alert("Logged out successfully");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Logout failed");
+    }
+  };
 
   useEffect(() => {
     async function getUsers() {
@@ -48,18 +64,18 @@ export default function Dashboard() {
         }
       }
     }
-
-    getUsers(); // Call the async function
-
+    getUsers();
     return () => {
-      // Cleanup code if needed (e.g., cancel tokens, timers)
-      console.log("Cleanup if necessary");
+      console.log("Cleanup");
     };
   }, [user]);
 
   if (!user) return null;
   return (
     <Container maxWidth="md" sx={{ mt: 6 }}>
+      <Button variant="contained" onClick={handleLogout}>
+        Logout
+      </Button>
       <Typography sx={{ color: "white" }} variant="h5" gutterBottom>
         Dashboard
       </Typography>
